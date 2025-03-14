@@ -1,3 +1,5 @@
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -16,6 +18,26 @@
             background: #333;
             color: white;
             padding: 20px;
+        }
+        .search-bar {
+            margin: 20px auto;
+            width: 50%;
+            display: flex;
+            justify-content: center;
+        }
+        .search-bar input {
+            width: 80%;
+            padding: 18px;
+            border: 1px solid #ccc;
+            border-radius: 5px 0 0 5px;
+        }
+        .search-bar button {
+            padding: 10px;
+            background: #28a745;
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 0 5px 5px 0;
         }
         .product-grid {
             display: grid;
@@ -59,9 +81,12 @@
     <header>
         <h1>Our Exclusive Products</h1>
     </header>
+    <div class="search-bar">
+        <input type="text" id="search-input" placeholder="Search for the other item you need to buy">
+        <button onclick="searchProducts()">Search</button>
+    </div>
     <div id="products-container" class="product-grid"></div>
     <script type="module">
-        // import { producs_data } from './product_data.js';
         const products_data = {
             "products": [
                 {
@@ -85,73 +110,40 @@
                     "description": "Soft and eco-friendly Eri silk stole, perfect for all seasons.",
                     "image_url": "https://example.com/images/eri_silk_stole.jpg",
                     "availability": "In Stock"
-                },
-                {
-                    "id": 3,
-                    "name": "Handcrafted Bamboo Lamp",
-                    "category": "Bamboo and Cane Crafts",
-                    "origin": "Nagaland",
-                    "material": "Bamboo, Cane",
-                    "price": 1800,
-                    "description": "Elegant handcrafted bamboo lamp that adds a rustic charm to your home decor.",
-                    "image_url": "https://example.com/images/bamboo_lamp.jpg",
-                    "availability": "Limited Stock"
-                },
-                {
-                    "id": 4,
-                    "name": "Cane Storage Basket",
-                    "category": "Bamboo and Cane Crafts",
-                    "origin": "Manipur",
-                    "material": "Cane",
-                    "price": 1200,
-                    "description": "Durable and stylish cane storage basket, handmade by skilled artisans.",
-                    "image_url": "https://example.com/images/cane_basket.jpg",
-                    "availability": "In Stock"
-                },
-                {
-                    "id": 5,
-                    "name": "Asharikandi Terracotta Pot",
-                    "category": "Pottery and Terracotta",
-                    "origin": "Assam",
-                    "material": "Terracotta Clay",
-                    "price": 900,
-                    "description": "Traditional Asharikandi-style terracotta pot, ideal for home decor.",
-                    "image_url": "https://example.com/images/asharikandi_pot.jpg",
-                    "availability": "In Stock"
-                },
-                {
-                    "id": 6,
-                    "name": "Wooden Carved Wall Panel",
-                    "category": "Wood Carving",
-                    "origin": "Meghalaya",
-                    "material": "Teak Wood",
-                    "price": 5000,
-                    "description": "Intricately carved wooden wall panel depicting traditional Northeast motifs.",
-                    "image_url": "https://example.com/images/wooden_panel.jpg",
-                    "availability": "Limited Stock"
                 }
             ]
         };
         
         const container = document.getElementById('products-container');
-        products_data.products.forEach(product => {
-            const productDiv = document.createElement('div');
-            productDiv.classList.add('product-card');
-            productDiv.innerHTML = `
-                <img src="${product.image_url}" alt="${product.name}">
-                <h2>${product.name}</h2>
-                <p>${product.description}</p>
-                <p><strong>Price:</strong> ₹${product.price}</p>
-                <p><strong>Material:</strong> ${product.material}</p>
-                <p><strong>Availability:</strong> ${product.availability}</p>
-                <button class="cart-btn" onclick="addToCart(${product.id})">Add to Cart</button>
-            `;
-            container.appendChild(productDiv);
-        });
-        
-        window.addToCart = function(productId) {
-            alert(`Product ID ${productId} added to cart!`);
+        function displayProducts(products) {
+            container.innerHTML = "";
+            products.forEach(product => {
+                const productDiv = document.createElement('div');
+                productDiv.classList.add('product-card');
+                productDiv.innerHTML = `
+                    <img src="${product.image_url}" alt="${product.name}">
+                    <h2>${product.name}</h2>
+                    <p>${product.description}</p>
+                    <p><strong>Price:</strong> ₹${product.price}</p>
+                    <p><strong>Material:</strong> ${product.material}</p>
+                    <p><strong>Availability:</strong> ${product.availability}</p>
+                    <button class="cart-btn" onclick="addToCart(${product.id})">Add to Cart</button>
+                `;
+                container.appendChild(productDiv);
+            });
         }
+        
+        function searchProducts() {
+            const query = document.getElementById('search-input').value.toLowerCase();
+            const filteredProducts = products_data.products.filter(product =>
+                product.name.toLowerCase().includes(query) ||
+                product.category.toLowerCase().includes(query) ||
+                product.material.toLowerCase().includes(query)
+            );
+            displayProducts(filteredProducts);
+        }
+        
+        displayProducts(products_data.products);
     </script>
 </body>
 </html>
